@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MySimpleFitnessApp</string>
+    <string name="loadDataButtonText">Lade Daten</string>
+</resources>
