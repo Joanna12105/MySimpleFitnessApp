@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MySimpleFitnessApp</string>
     <string name="loadDataButtonText">Lade Daten</string>
+
+
+    <string name="success_response">Response : %1$s</string>
+    <string name="error_response">Error : %1$s</string>
+
+
 </resources>
