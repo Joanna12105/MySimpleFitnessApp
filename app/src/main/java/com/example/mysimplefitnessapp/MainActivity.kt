@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -21,10 +22,11 @@ class MainActivity : AppCompatActivity() {
 
     //Log-Variable und Konstante
     private val TAG = "MainActivity"
-    private val mURL = "https://run.mocky.io/v3/e815e607-a1ba-4083-ae67-895c6078d4bb"
+    private val mURL = "https://draussenwetter.appspot.com/MCdata.json"
 
     //Layout-Variable
     private val btnLoad : Button by lazy{ findViewById(R.id.loadDataButton) }
+    private val tvPuls : TextView by lazy{ findViewById(R.id.textViewPuls) }
 
     //Variablen
     private val mRequestQueue : RequestQueue by lazy { Volley.newRequestQueue(applicationContext) }
@@ -58,11 +60,10 @@ class MainActivity : AppCompatActivity() {
         try {
             //response String zu einem JSON Objekt
             val obj = JSONObject(jsonString)
-            //extraieren der Temperatur
-            val sensorname = obj.getString("name")
-            val temperature = obj.getDouble("value")
+            val pulse = obj.getInt("puls")
 
-            toast("Sensor: $sensorname liefert Messwert $temperature")
+            toast("Puls: $pulse")
+            tvPuls.text = pulse.toString()
         } catch (e : JSONException) {
             e.printStackTrace()
             Log.e(TAG, getString(R.string.error_json_parsing))
