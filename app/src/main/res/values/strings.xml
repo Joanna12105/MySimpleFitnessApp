@@ -9,6 +9,8 @@
     <string name="error_msg_title">Ein Fehler ist aufgetreten!</string>
     <string name="error_internet_communication">Fehler bei der Internetkommunikation.</string>
     <string name="pulse">Puls: </string>
+    <string name="load_data">Lade Daten</string>
+    <string name="stop_data">Stoppe Ladevorgang</string>
 
 
 </resources>

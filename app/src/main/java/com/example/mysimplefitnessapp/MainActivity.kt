@@ -38,20 +38,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        var loading = false
 
 
         btnLoad.setOnClickListener {
             Log.i(TAG, "Button LadeDaten wurde gedrückt")
-            liveData()
+            loading = !loading
+            btnLoad.text = if (loading) getString(R.string.stop_data)
+            else getString(R.string.load_data)
+            liveData(loading)
         }
     }
 
-    private fun liveData() {
-        mRunnable = Runnable {
-            mHandler.postDelayed(mRunnable, 3 * 1000)
-            getDataFromInternet()
+    private fun liveData(loading : Boolean) {
+        if (loading) {
+            mRunnable = Runnable {
+                mHandler.postDelayed(mRunnable, 3 * 1000)
+                getDataFromInternet()
+            }
+            mHandler.postDelayed(mRunnable, 100)
+        } else {
+            mHandler.removeCallbacks(mRunnable)
         }
-        mHandler.postDelayed(mRunnable, 100)
     }
 
     private fun getDataFromInternet() {
