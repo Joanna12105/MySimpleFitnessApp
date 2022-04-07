@@ -1,6 +1,7 @@
 package com.example.mysimplefitnessapp
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     //Layout-Variable
     private val btnLoad : Button by lazy{ findViewById(R.id.loadDataButton) }
+    private val btnGraph : Button by lazy{ findViewById(R.id.graphButton) }
     private val tvPuls : TextView by lazy{ findViewById(R.id.textViewPuls) }
 
     //Variablen
@@ -55,6 +57,12 @@ class MainActivity : AppCompatActivity() {
             btnLoad.text = if (loading) getString(R.string.stop_data)
             else getString(R.string.load_data)
             liveData(loading)
+        }
+
+        btnGraph.setOnClickListener{
+            Log.i(TAG, "Button GraphActivity wurde gedrückt")
+            val intent = Intent(applicationContext, GraphDataActivity::class.java)
+            startActivity(intent)
         }
     }
 
