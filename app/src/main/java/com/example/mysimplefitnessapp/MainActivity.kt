@@ -2,6 +2,7 @@ package com.example.mysimplefitnessapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     //Variablen
     private val mRequestQueue : RequestQueue by lazy { Volley.newRequestQueue(applicationContext) }
+    private val mHandler : Handler by lazy { Handler() }
+    private lateinit var mRunnable : Runnable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +42,16 @@ class MainActivity : AppCompatActivity() {
 
         btnLoad.setOnClickListener {
             Log.i(TAG, "Button LadeDaten wurde gedrückt")
+            liveData()
+        }
+    }
+
+    private fun liveData() {
+        mRunnable = Runnable {
+            mHandler.postDelayed(mRunnable, 3 * 1000)
             getDataFromInternet()
         }
+        mHandler.postDelayed(mRunnable, 100)
     }
 
     private fun getDataFromInternet() {
@@ -63,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             val pulse = obj.getInt("puls")
 
             toast("Puls: $pulse")
-            tvPuls.text = pulse.toString()
+            tvPuls.text = getString(R.string.pulse) + pulse.toString()
         } catch (e : JSONException) {
             e.printStackTrace()
             Log.e(TAG, getString(R.string.error_json_parsing))
