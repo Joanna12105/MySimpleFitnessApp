@@ -1,5 +1,6 @@
 package com.example.mysimplefitnessapp
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -17,9 +18,15 @@ import splitties.alertdialog.alertDialog
 import splitties.alertdialog.okButton
 import splitties.toast.longToast
 import splitties.toast.toast
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.PrintStream
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val DATA_FILENAME = "FitnessData"
+    private var fitnessList = arrayListOf<String>()
 
     //Log-Variable und Konstante
     private val TAG = "MainActivity"
@@ -35,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mRunnable : Runnable
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -48,6 +56,14 @@ class MainActivity : AppCompatActivity() {
             else getString(R.string.load_data)
             liveData(loading)
         }
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG, "onStop")
+        saveToFile()
+        liveData(false)
     }
 
     private fun liveData(loading : Boolean) {
@@ -68,6 +84,10 @@ class MainActivity : AppCompatActivity() {
             {
                 // longToast(getString(R.string.success_response, it.toString()))
                 parseJSONData(it)
+                fitnessList.add(it)
+                if(fitnessList.size >= 10) {
+                    saveToFile()
+                }
             }, Response.ErrorListener {
                 dialogError(getString(R.string.error_internet_communication))
             })
@@ -95,6 +115,31 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }.show()
+    }
+
+    private fun saveToFile() {
+        Log.i(TAG, "Save Data to File")
+
+        var fileOutStream : FileOutputStream? = null
+
+        try {
+            fileOutStream = openFileOutput(DATA_FILENAME, Context.MODE_PRIVATE or Context.MODE_APPEND)
+        }
+        catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            dialogError(getString(R.string.error_file_not_found))
+        }
+
+        val printStream = PrintStream(fileOutStream)
+        for(data in fitnessList){
+            printStream.println(data)
+        }
+        if(printStream.checkError()) {
+            dialogError(getString(R.string.error_saving_file))
+        }
+        printStream.close()
+
+        fitnessList.clear()
     }
 
 }
