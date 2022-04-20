@@ -87,6 +87,22 @@ class GraphDataActivity : AppCompatActivity() {
         }
     }
 
+    private fun parseJSON(jsonString : String) {
+        try {
+            val obj = JSONObject(jsonString)
+            val pulse = obj.getInt("puls").toDouble()
+            Log.i(TAG, "Puls: $pulse")
+
+            pulseSeries.appendData(DataPoint(lastXvalue, pulse), true, 1000)
+            lastXvalue++
+        }
+        catch (e : JSONException) {
+            Log.e(TAG, "Error JSON Parsing")
+            e.printStackTrace()
+            dialogError(getString(R.string.error_json_parsing))
+        }
+    }
+
     private fun parseJSONToSeries() {
         for(i in 0 until dataArray.size) {
             try {
